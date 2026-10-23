@@ -11,8 +11,8 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -27,7 +27,7 @@
             font-family: 'Great Vibes', cursive;
         }
 
-        /* ---------------- PAGE TRANSITIONS ---------------- */
+        /* PAGE TRANSITIONS */
         .page {
             position: absolute;
             top: 0;
@@ -40,1343 +40,622 @@
         .page-hidden {
             opacity: 0;
             pointer-events: none;
-            transform: scale(0.95);
+            transform: scale(0.95) translateY(20px);
         }
 
-        .page-active {
+        .page-visible {
             opacity: 1;
             pointer-events: auto;
-            transform: scale(1);
+            transform: scale(1) translateY(0);
         }
 
-        /* ---------------- PAGE 1: WELCOME SCREEN ---------------- */
-        #page1 {
-            background: radial-gradient(circle at center, #2a081a 0%, #0f0712 70%, #050207 100%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 50;
-        }
-
-        .heart-container {
-            cursor: pointer;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.3s ease;
-        }
-
-        .heart-container:hover {
-            transform: scale(1.08);
-        }
-
-        .heart-svg {
-            width: 180px;
-            height: 180px;
-            fill: #e11d48;
-            filter: drop-shadow(0 0 25px rgba(225, 29, 72, 0.75));
-            animation: heartBeat 1.3s infinite ease-in-out;
-        }
-
-        @keyframes heartBeat {
-            0% { transform: scale(1); filter: drop-shadow(0 0 20px rgba(225, 29, 72, 0.6)); }
-            14% { transform: scale(1.15); filter: drop-shadow(0 0 35px rgba(225, 29, 72, 0.9)); }
-            28% { transform: scale(1); filter: drop-shadow(0 0 20px rgba(225, 29, 72, 0.6)); }
-            42% { transform: scale(1.1); filter: drop-shadow(0 0 30px rgba(225, 29, 72, 0.8)); }
-            70% { transform: scale(1); filter: drop-shadow(0 0 20px rgba(225, 29, 72, 0.6)); }
-        }
-
-        .heart-glow {
-            position: absolute;
-            width: 220px;
-            height: 220px;
-            background: radial-gradient(circle, rgba(225, 29, 72, 0.4) 0%, rgba(0,0,0,0) 70%);
-            border-radius: 50%;
-            animation: pulseGlow 2.6s infinite ease-in-out;
+        /* FLOATING HEARTS BACKGROUND */
+        .heart-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
         }
 
-        @keyframes pulseGlow {
-            0%, 100% { transform: scale(0.9); opacity: 0.5; }
-            50% { transform: scale(1.2); opacity: 0.8; }
-        }
-
-        .dark-particle {
+        .floating-heart {
             position: absolute;
-            pointer-events: none;
-            opacity: 0;
-            animation: floatParticle 8s infinite linear;
-            color: rgba(244, 114, 182, 0.5);
+            bottom: -50px;
+            color: rgba(244, 114, 182, 0.3);
+            animation: floatUp linear infinite;
         }
 
-        @keyframes floatParticle {
-            0% { transform: translateY(100vh) scale(0) rotate(0deg); opacity: 0; }
-            20% { opacity: 0.7; }
-            80% { opacity: 0.5; }
-            100% { transform: translateY(-10vh) scale(1.2) rotate(360deg); opacity: 0; }
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg) scale(0.8);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-110vh) rotate(360deg) scale(1.2);
+                opacity: 0;
+            }
         }
 
-        /* ---------------- PAGE 2: MAIN STORY PAGE ---------------- */
-        #page2 {
-            background: linear-gradient(135deg, #fff0f3 0%, #ffe3e8 40%, #ffd1dc 100%);
-            min-height: 100vh;
-            position: relative;
-        }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.82);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border: 1px solid rgba(255, 255, 255, 0.7);
-            box-shadow: 0 10px 30px rgba(225, 112, 133, 0.12);
-        }
-
-        /* VINYL TURNTABLE ANIMATIONS */
-        .vinyl-disc {
-            background: radial-gradient(circle, #2b2b2b 18%, #111111 20%, #111111 25%, #222222 26%, #111111 40%, #222222 41%, #111111 60%, #222222 61%, #111111 75%);
-            border: 4px solid #000;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        /* TURNTABLE ANIMATIONS */
+        .turntable-disc {
             transition: transform 0.5s ease;
         }
 
-        .vinyl-spinning {
-            animation: spinVinyl 3s linear infinite;
+        .spinning {
+            animation: spin 3s linear infinite;
         }
 
-        @keyframes spinVinyl {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
         }
 
         .tonearm {
             transform-origin: 20px 20px;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            transform: rotate(-30deg);
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .tonearm.playing {
-            transform: rotate(8deg);
+        .tonearm-on {
+            transform: rotate(23deg);
         }
 
-        /* Interactive Envelope Animation */
-        .envelope-wrapper { perspective: 1000px; }
+        /* GLASSMORPHISM */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .glass-dark {
+            background: rgba(20, 15, 25, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* CUSTOM SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #f472b6;
+            border-radius: 10px;
+        }
+
+        /* LIGHTBOX */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        /* ENVELOPE STYLES */
+        .envelope-wrapper {
+            perspective: 1000px;
+        }
+
         .envelope {
             position: relative;
             width: 100%;
-            max-width: 360px;
-            height: 220px;
-            background: #f472b6;
-            border-radius: 14px;
+            height: 200px;
+            background-color: #fce7f3;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
             cursor: pointer;
-            box-shadow: 0 15px 35px rgba(225, 112, 133, 0.25);
-            transition: transform 0.4s ease;
-            margin: 0 auto;
+            transition: transform 0.3s ease;
         }
-        .envelope:hover { transform: translateY(-5deg); }
+
+        .envelope:hover {
+            transform: translateY(-5px);
+        }
+
         .envelope-flap {
             position: absolute;
-            top: 0; left: 0; width: 0; height: 0;
-            border-left: 180px solid transparent;
-            border-right: 180px solid transparent;
-            border-top: 120px solid #ec4899;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background-color: #fbcfe8;
+            clip-path: polygon(0 0, 50% 100%, 100% 0);
             transform-origin: top;
-            transition: transform 0.6s ease 0.2s, z-index 0.2s;
-            z-index: 4;
-        }
-        @media (max-width: 400px) {
-            .envelope-flap { border-left-width: 150px; border-right-width: 150px; border-top-width: 100px; }
-            .envelope { max-width: 300px; height: 190px; }
-        }
-        .envelope.open .envelope-flap { transform: rotateX(180deg); z-index: 1; }
-        .letter {
-            position: absolute;
-            bottom: 10px; left: 5%; width: 90%; height: 88%;
-            background: #ffffff;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            transition: transform 0.6s ease 0.4s;
-            z-index: 2;
-            overflow-y: auto;
-        }
-        .envelope.open .letter { transform: translateY(-145px); z-index: 5; height: auto; max-height: 420px; }
-        .envelope-front {
-            position: absolute;
-            bottom: 0; left: 0; width: 0; height: 0;
-            border-left: 180px solid #f472b6;
-            border-right: 180px solid #f472b6;
-            border-bottom: 120px solid #fb7185;
-            border-radius: 0 0 14px 14px;
+            transition: transform 0.6s ease;
             z-index: 3;
         }
-        @media (max-width: 400px) {
-            .envelope-front { border-left-width: 150px; border-right-width: 150px; border-bottom-width: 100px; }
+
+        .envelope.open .envelope-flap {
+            transform: rotateX(180deg);
+            z-index: 1;
         }
 
-        /* Polaroid Photo Cards */
-        .polaroid {
-            background: white;
-            padding: 10px 10px 18px 10px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        .letter-preview {
+            position: absolute;
+            bottom: 10px;
+            left: 5%;
+            width: 90%;
+            height: 160px;
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            transition: transform 0.6s ease;
+            z-index: 2;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
         }
-        .polaroid:hover { transform: translateY(-6px) rotate(1deg); box-shadow: 0 15px 30px rgba(225, 112, 133, 0.2); }
 
-        /* Carousel Styles */
-        .carousel-slide { display: none; }
-        .carousel-slide.active { display: block; animation: fadeInSlide 0.5s ease-in-out; }
-        @keyframes fadeInSlide { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
-
-        /* Modal styling */
-        .modal-active { display: flex !important; animation: fadeIn 0.3s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-
-        /* Quiz Buttons */
-        .quiz-opt { transition: all 0.2s ease; }
-        .quiz-opt.correct { background-color: #10b981 !important; color: white !important; border-color: #059669 !important; }
-        .quiz-opt.wrong { background-color: #ef4444 !important; color: white !important; border-color: #dc2626 !important; }
+        .envelope.open .letter-preview {
+            transform: translateY(-60px);
+        }
     </style>
 </head>
-<body class="relative">
+<body class="bg-pink-50 min-h-screen text-gray-800">
 
-    <!-- Audio Elements: mus_01.m4a (Canción en bucle) y mus_02.m4a (Voz) -->
-    <audio id="audioPlayer" src="audio/mus_01.m4a" preload="auto" loop></audio>
-    <audio id="voicePlayer" src="audio/mus_02.m4a" preload="auto"></audio>
+    <!-- CORAZONES FLOTANTES DE FONDO -->
+    <div class="heart-bg" id="heart-container"></div>
 
-    <!-- ==================== PÁGINA 1: PANTALLA DE BIENVENIDA / CORAZÓN INTERACTIVO ==================== -->
-    <section id="page1" class="page page-active p-6 text-center select-none">
-        <div id="particleContainer1" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
+    <!-- ELEMENTOS DE AUDIO GLOBAL -->
+    <audio id="bg-music" src="audio/mus_01.m4a" preload="auto" loop></audio>
+    <audio id="voice-note" src="audio/mus_02.m4a" preload="auto"></audio>
 
-        <div class="relative z-10 max-w-sm mx-auto flex flex-col items-center justify-center min-h-screen py-10">
-            <div class="mb-10 space-y-2">
-                <span class="inline-block px-3 py-1 bg-rose-950/60 text-rose-300 text-xs tracking-widest uppercase rounded-full border border-rose-800/40">
-                    Bienvenido/a
-                </span>
-                <h1 class="text-5xl md:text-6xl font-cursive font-bold text-rose-100 drop-shadow-md">
-                    Nuestra Historia
-                </h1>
-                <p class="text-xs text-rose-300/80 font-light">
-                    Un espacio especial creado solo para ti y para mí
-                </p>
-            </div>
-
-            <div class="my-6 relative flex items-center justify-center">
-                <div class="heart-glow"></div>
-                <div class="heart-container" onclick="goToPage2('story')" title="Haz clic para abrir">
-                    <svg class="heart-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                    </svg>
-                </div>
-            </div>
-
-            <div class="mt-8 space-y-3">
-                <p class="text-sm font-medium text-rose-200/90 animate-pulse flex items-center justify-center gap-1.5">
-                    <i class="fa-solid fa-hand-pointer text-xs text-rose-400"></i>
-                    Toca el corazón para abrir nuestro regalo especial ❤️
-                </p>
-                <div class="text-[10px] text-rose-400/60">
-                    25.09.2024 • Para Siempre
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ==================== PÁGINA 2: HISTORIA DE AMOR, GALERÍA Y QUIZ ==================== -->
-    <section id="page2" class="page page-hidden pb-20">
-        <div id="particleContainer2" class="fixed inset-0 pointer-events-none z-0 overflow-hidden"></div>
-
-        <!-- Navigation Bar -->
-        <header class="fixed top-0 left-0 right-0 z-40 bg-white/80 backdrop-blur-md border-b border-rose-200/60 shadow-sm px-4 py-2.5 flex items-center justify-between">
-            <button onclick="goToPage1()" class="text-rose-600 px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 hover:bg-rose-50 transition active:scale-95">
-                <i class="fa-solid fa-arrow-left"></i> Inicio
-            </button>
+    <!-- ========================================== -->
+    <!-- PÁGINA 1: PORTADA Y CONTADOR DE TIEMPO     -->
+    <!-- ========================================== -->
+    <div id="page1" class="page page-visible flex flex-col items-center justify-center p-4 min-h-screen relative z-10">
+        <div class="max-w-md w-full glass-card p-8 rounded-3xl shadow-2xl text-center relative overflow-hidden border border-rose-100">
             
-            <div class="flex gap-1 bg-rose-100/70 p-1 rounded-full text-xs font-semibold">
-                <button id="tabStoryBtn" onclick="switchTab('story')" class="px-3 py-1 rounded-full bg-white text-rose-600 shadow-sm transition">
-                    <i class="fa-solid fa-heart mr-1"></i> Historia
-                </button>
-                <button id="tabQuizBtn" onclick="switchTab('quiz')" class="px-3 py-1 rounded-full text-gray-600 hover:text-rose-600 transition">
-                    <i class="fa-solid fa-gamepad mr-1"></i> Quiz de Amor
-                </button>
+            <div class="inline-block p-3 rounded-full bg-rose-100 text-rose-500 mb-4 animate-bounce">
+                <i class="fa-solid fa-heart text-2xl"></i>
             </div>
-        </header>
 
-        <!-- Main Container -->
-        <main class="relative z-10 max-w-xl mx-auto px-4 pt-20">
-            
-            <!-- ==================== SECCIÓN 1: HISTORIA Y GALERÍA ==================== -->
-            <div id="tabStory" class="block">
+            <h1 class="font-cursive text-5xl font-bold text-rose-600 mb-2">Nuestra Historia</h1>
+            <p class="text-xs uppercase tracking-widest text-gray-500 font-semibold mb-6">Un espacio dedicado a ti y a nuestro amor</p>
+
+            <!-- CONTADOR DE TIEMPO INTERACTIVO -->
+            <div class="bg-white/90 p-5 rounded-2xl shadow-inner mb-6 border border-rose-100">
+                <p class="text-xs font-semibold text-rose-500 uppercase tracking-wider mb-3">Tiempo caminando juntos ❤️</p>
                 
-                <div class="text-center mb-8">
-                    <div class="inline-block p-2 px-4 rounded-full bg-rose-100/80 text-rose-600 text-xs font-semibold tracking-wider uppercase mb-3 shadow-sm border border-rose-200">
-                        <i class="fa-solid fa-heart text-rose-500 animate-pulse mr-1"></i> Nuestra Historia
+                <div class="grid grid-cols-4 gap-2 text-center">
+                    <div class="bg-rose-50 p-2.5 rounded-xl border border-rose-100">
+                        <span id="days" class="block text-2xl font-bold text-rose-600">00</span>
+                        <span class="text-[10px] text-gray-400 uppercase font-semibold">Días</span>
                     </div>
-                    <h1 class="text-6xl md:text-7xl font-cursive font-bold text-rose-600 mb-1 drop-shadow-sm">
-                        Tú y Yo
-                    </h1>
-                    <p class="text-gray-600 text-xs md:text-sm font-light italic">
-                        "Cada segundo a tu lado es mi lugar favorito en el mundo"
-                    </p>
+                    <div class="bg-rose-50 p-2.5 rounded-xl border border-rose-100">
+                        <span id="hours" class="block text-2xl font-bold text-rose-600">00</span>
+                        <span class="text-[10px] text-gray-400 uppercase font-semibold">Horas</span>
+                    </div>
+                    <div class="bg-rose-50 p-2.5 rounded-xl border border-rose-100">
+                        <span id="minutes" class="block text-2xl font-bold text-rose-600">00</span>
+                        <span class="text-[10px] text-gray-400 uppercase font-semibold">Min</span>
+                    </div>
+                    <div class="bg-rose-50 p-2.5 rounded-xl border border-rose-100">
+                        <span id="seconds" class="block text-2xl font-bold text-rose-600">00</span>
+                        <span class="text-[10px] text-gray-400 uppercase font-semibold">Seg</span>
+                    </div>
                 </div>
 
-                <!-- Dynamic Relationship Counter -->
-                <section class="glass-card rounded-3xl p-6 text-center mb-8 border border-white/80">
-                    <h2 class="text-xs uppercase tracking-widest text-rose-500 font-bold mb-4 flex items-center justify-center gap-2">
-                        <i class="fa-regular fa-clock"></i> Tiempo Juntos
-                    </h2>
-                    <div class="grid grid-cols-4 gap-2 md:gap-3">
-                        <div class="bg-white/90 p-3 rounded-2xl shadow-sm border border-rose-100">
-                            <span id="days" class="block text-2xl md:text-3xl font-extrabold text-rose-600">00</span>
-                            <span class="text-[10px] md:text-xs text-gray-500 font-medium uppercase">Días</span>
-                        </div>
-                        <div class="bg-white/90 p-3 rounded-2xl shadow-sm border border-rose-100">
-                            <span id="hours" class="block text-2xl md:text-3xl font-extrabold text-rose-600">00</span>
-                            <span class="text-[10px] md:text-xs text-gray-500 font-medium uppercase">Horas</span>
-                        </div>
-                        <div class="bg-white/90 p-3 rounded-2xl shadow-sm border border-rose-100">
-                            <span id="minutes" class="block text-2xl md:text-3xl font-extrabold text-rose-600">00</span>
-                            <span class="text-[10px] md:text-xs text-gray-500 font-medium uppercase">Min</span>
-                        </div>
-                        <div class="bg-white/90 p-3 rounded-2xl shadow-sm border border-rose-100">
-                            <span id="seconds" class="block text-2xl md:text-3xl font-extrabold text-rose-600">00</span>
-                            <span class="text-[10px] md:text-xs text-gray-500 font-medium uppercase">Seg</span>
-                        </div>
-                    </div>
-                    <p class="text-[11px] text-rose-400 mt-4 italic font-light">
-                        Desde el 25 de Septiembre de 2024... y contando para siempre ❤️
-                    </p>
-                </section>
-
-                <!-- DISCO DE VINILO INTERACTIVO (Local Audio audio/mus_01.m4a) -->
-                <section class="glass-card rounded-3xl p-6 mb-8 border border-white/80 text-center relative overflow-hidden">
-                    <div class="mb-4">
-                        <span class="text-[10px] uppercase font-bold tracking-widest text-rose-500 bg-rose-100 px-3 py-1 rounded-full">
-                            <i class="fa-solid fa-compact-disc text-rose-500 animate-spin mr-1"></i> Tocadiscos Interactivo
-                        </span>
-                        <h3 class="text-xl font-bold text-gray-800 mt-2">Toca para reproducir el soundtrack de nuestro amor</h3>
-                        <p class="text-xs text-gray-500">"Tú y Yo" — Motel</p>
-                    </div>
-
-                    <!-- Visual Vinyl & Tonearm -->
-                    <div class="relative w-56 h-56 mx-auto my-4 cursor-pointer group" onclick="toggleAudioPlay()">
-                        <div id="vinylDisc" class="vinyl-disc w-52 h-52 rounded-full absolute inset-0 m-auto flex items-center justify-center">
-                            <div class="w-20 h-20 bg-rose-500 rounded-full border-4 border-rose-300 flex items-center justify-center text-white shadow-inner">
-                                <i class="fa-solid fa-heart text-2xl animate-pulse"></i>
-                            </div>
-                        </div>
-
-                        <div id="tonearm" class="tonearm absolute top-2 right-4 w-12 h-28 pointer-events-none z-10">
-                            <div class="w-6 h-6 bg-gray-400 rounded-full border-2 border-gray-600 shadow-md"></div>
-                            <div class="w-1.5 h-20 bg-gradient-to-b from-gray-400 to-gray-300 ml-2 rounded-full shadow-sm"></div>
-                            <div class="w-3 h-5 bg-gray-700 ml-1 rounded-sm shadow-md"></div>
-                        </div>
-                    </div>
-
-                    <!-- Audio Progress Bar -->
-                    <div class="max-w-xs mx-auto mt-4 px-2">
-                        <div class="w-full bg-rose-200/80 rounded-full h-2 cursor-pointer relative" id="progressBarContainer" onclick="seekAudio(event)">
-                            <div id="progressBar" class="bg-rose-500 h-2 rounded-full w-0 transition-all duration-200"></div>
-                        </div>
-                        <div class="flex justify-between text-[10px] text-gray-500 mt-1">
-                            <span id="currentTime">0:00</span>
-                            <span id="durationTime">0:00</span>
-                        </div>
-                    </div>
-
-                    <!-- Controls Button -->
-                    <div class="flex items-center justify-center gap-4 mt-3">
-                        <button onclick="toggleAudioPlay()" id="playBtn" class="w-12 h-12 bg-rose-500 text-white rounded-full flex items-center justify-center text-lg shadow-lg hover:bg-rose-600 active:scale-90 transition">
-                            <i id="playIcon" class="fa-solid fa-play"></i>
-                        </button>
-                    </div>
-                </section>
-
-                <!-- REPRODUCTOR DE VOZ CON ATENUACIÓN FUERTE AL 15% (audio/mus_02.m4a) -->
-                <section class="glass-card rounded-3xl p-6 mb-8 border border-white/80 text-center relative overflow-hidden">
-                    <div class="mb-4">
-                        <span class="text-[10px] uppercase font-bold tracking-widest text-pink-600 bg-pink-100 px-3 py-1 rounded-full">
-                            <i class="fa-solid fa-microphone text-pink-500 mr-1"></i> Mensaje de Voz
-                        </span>
-                        <h3 class="text-xl font-bold text-gray-800 mt-2">nuestro secreto 💘❤️‍🩹</h3>
-                        <p class="text-xs text-gray-500">Unas palabras hechas con todo mi corazón</p>
-                    </div>
-
-                    <div class="flex items-center justify-center gap-4 my-3">
-                        <button onclick="toggleVoicePlay()" id="voicePlayBtn" class="w-14 h-14 bg-pink-500 text-white rounded-full flex items-center justify-center text-xl shadow-lg hover:bg-pink-600 active:scale-90 transition">
-                            <i id="voicePlayIcon" class="fa-solid fa-play"></i>
-                        </button>
-                    </div>
-
-                    <!-- Voice Progress Bar -->
-                    <div class="max-w-xs mx-auto mt-4 px-2">
-                        <div class="w-full bg-pink-200/80 rounded-full h-2 cursor-pointer relative" id="voiceBarContainer" onclick="seekVoice(event)">
-                            <div id="voiceProgressBar" class="bg-pink-500 h-2 rounded-full w-0 transition-all duration-200"></div>
-                        </div>
-                        <div class="flex justify-between text-[10px] text-gray-500 mt-1">
-                            <span id="voiceCurrentTime">0:00</span>
-                            <span id="voiceDurationTime">0:00</span>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- CARRUSEL DE FOTOS (img_05.jpg a img_12.jpg) -->
-                <section class="glass-card rounded-3xl p-5 mb-8 border border-white/80">
-                    <div class="text-center mb-4">
-                        <h2 class="text-xl font-bold text-rose-700 flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-images text-rose-500"></i> Revive nuestros hermosos recuerdos
-                        </h2>
-                        <p class="text-xs text-gray-500">Desliza para recorrer nuestras mejores fotos</p>
-                    </div>
-
-                    <div class="relative rounded-2xl overflow-hidden aspect-square shadow-lg bg-black/10">
-                        
-                        <!-- Slide 1 (img_05) -->
-                        <div class="carousel-slide active w-full h-full relative">
-                            <img src="imagenes.ayx/img_05.jpg" alt="Foto 5" class="w-full h-full object-cover">
-                            <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-4 text-white text-xs text-center font-medium">
-                                Recuerdos especiales ✨
-                            </div>
-                        </div>
-
-                        <!-- Slide 2 (img_06) -->
-                        <div class="carousel-slide w-full h-full relative">
-                            <img src="imagenes.ayx/img_06.jpg" alt="Foto 6" class="w-full h-full object-cover">
-                            <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-4 text-white text-xs text-center font-medium">
-                                Momentos inolvidables ❤️
-                            </div>
-                        </div>
-
-                        <!-- Slide 3 (img_07) -->
-                        <div class="carousel-slide w-full h-full relative">
-                            <img src="imagenes.ayx/img_07.jpg" alt="Foto 7" class="w-full h-full object-cover">
-                            <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-4 text-white text-xs text-center font-medium">
-                                Juntos en cada paso 🌹
-                            </div>
-                        </div>
-
-                        <!-- Slide 4 (img_08) -->
-                        <div class="carousel-slide w-full h-full relative">
-                            <img src="imagenes.ayx/img_08.jpg" alt="Foto 8" class="w-full h-full object-cover">
-                            <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-4 text-white text-xs text-center font-medium">
-                                Amor infinito 💖
-                            </div>
-                        </div>
-
-                        <!-- Slide 5 (img_09) -->
-                        <div class="carousel-slide w-full h-full relative">
-                            <img src="imagenes.ayx/img_09.jpg" alt="Foto 9" class="w-full h-full object-cover">
-                            <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-4 text-white text-xs text-center font-medium">
-                                Tu sonrisa que me enamora 🥰
-                            </div>
-                        </div>
-
-                        <!-- Slide 6 (img_10) -->
-                        <div class="carousel-slide w-full h-full relative">
-                            <img src="imagenes.ayx/img_10.jpg" alt="Foto 10" class="w-full h-full object-cover">
-                            <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-4 text-white text-xs text-center font-medium">
-                                Sumando recuerdos inolvidables 📸
-                            </div>
-                        </div>
-
-                        <!-- Slide 7 (img_11) -->
-                        <div class="carousel-slide w-full h-full relative">
-                            <img src="imagenes.ayx/img_11.jpg" alt="Foto 11" class="w-full h-full object-cover">
-                            <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-4 text-white text-xs text-center font-medium">
-                                Siempre juntos de la mano 👩‍❤️‍👨
-                            </div>
-                        </div>
-
-                        <!-- Slide 8 (img_12) -->
-                        <div class="carousel-slide w-full h-full relative">
-                            <img src="imagenes.ayx/img_12.jpg" alt="Foto 12" class="w-full h-full object-cover">
-                            <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-4 text-white text-xs text-center font-medium">
-                                Para siempre y un día más 💍
-                            </div>
-                        </div>
-
-                        <!-- Controls -->
-                        <button onclick="changeSlide(-1)" class="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/70 backdrop-blur-md text-gray-800 flex items-center justify-center shadow-md hover:bg-white active:scale-90 transition z-10">
-                            <i class="fa-solid fa-chevron-left text-xs"></i>
-                        </button>
-                        <button onclick="changeSlide(1)" class="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/70 backdrop-blur-md text-gray-800 flex items-center justify-center shadow-md hover:bg-white active:scale-90 transition z-10">
-                            <i class="fa-solid fa-chevron-right text-xs"></i>
-                        </button>
-
-                        <!-- Indicators -->
-                        <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-                            <span class="slide-dot w-2 h-2 rounded-full bg-white/80 cursor-pointer" onclick="setSlide(0)"></span>
-                            <span class="slide-dot w-2 h-2 rounded-full bg-white/40 cursor-pointer" onclick="setSlide(1)"></span>
-                            <span class="slide-dot w-2 h-2 rounded-full bg-white/40 cursor-pointer" onclick="setSlide(2)"></span>
-                            <span class="slide-dot w-2 h-2 rounded-full bg-white/40 cursor-pointer" onclick="setSlide(3)"></span>
-                            <span class="slide-dot w-2 h-2 rounded-full bg-white/40 cursor-pointer" onclick="setSlide(4)"></span>
-                            <span class="slide-dot w-2 h-2 rounded-full bg-white/40 cursor-pointer" onclick="setSlide(5)"></span>
-                            <span class="slide-dot w-2 h-2 rounded-full bg-white/40 cursor-pointer" onclick="setSlide(6)"></span>
-                            <span class="slide-dot w-2 h-2 rounded-full bg-white/40 cursor-pointer" onclick="setSlide(7)"></span>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- CARRUSEL DE VIDEOS (video/vid_01.mp4 y video/vid_02.mp4) -->
-                <section class="glass-card rounded-3xl p-5 mb-10 border border-white/80">
-                    <div class="text-center mb-4">
-                        <h2 class="text-xl font-bold text-rose-700 flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-video text-rose-500"></i> Revive nuestros recuerdos en video
-                        </h2>
-                        <p class="text-xs text-gray-500">Desliza para ver nuestros momentos en video</p>
-                    </div>
-
-                    <div class="relative rounded-2xl overflow-hidden aspect-square shadow-lg bg-black/90">
-                        
-                        <!-- Reproductor de video dinámico con object-cover -->
-                        <div class="w-full h-full relative flex items-center justify-center">
-                            <video id="activeVideoPlayer" src="video/vid_01.mp4" controls preload="metadata" class="w-full h-full object-cover"></video>
-                            <div id="videoCaption" class="absolute top-3 left-3 bg-black/60 backdrop-blur-md text-white text-[10px] px-2.5 py-1 rounded-full pointer-events-none">
-                                ⚽ Jugando fútbol en la cancha
-                            </div>
-                        </div>
-
-                        <!-- Controls -->
-                        <button onclick="changeVideoSlide(-1)" class="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/70 backdrop-blur-md text-gray-800 flex items-center justify-center shadow-md hover:bg-white active:scale-90 transition z-10">
-                            <i class="fa-solid fa-chevron-left text-xs"></i>
-                        </button>
-                        <button onclick="changeVideoSlide(1)" class="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/70 backdrop-blur-md text-gray-800 flex items-center justify-center shadow-md hover:bg-white active:scale-90 transition z-10">
-                            <i class="fa-solid fa-chevron-right text-xs"></i>
-                        </button>
-
-                        <!-- Indicators -->
-                        <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-                            <span id="videoDot0" class="w-2.5 h-2.5 rounded-full bg-white/90 cursor-pointer" onclick="setVideoSlide(0)"></span>
-                            <span id="videoDot1" class="w-2.5 h-2.5 rounded-full bg-white/40 cursor-pointer" onclick="setVideoSlide(1)"></span>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Photo Grid (Polaroid Cards img_01 to img_04) -->
-                <section class="mb-10">
-                    <div class="text-center mb-6">
-                        <h2 class="text-2xl font-bold text-rose-700">Nuestros Momentos</h2>
-                        <p class="text-xs text-gray-500">Haz clic en cualquier foto para ver el recuerdo completo</p>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <div onclick="openPhotoModal('imagenes.ayx/img_01.jpg', 'El Comienzo', 'Aquel 25 de Septiembre de 2024 donde comenzó nuestra hermosa historia juntos.')" class="polaroid rounded-2xl cursor-pointer group">
-                            <div class="relative aspect-square rounded-xl overflow-hidden mb-2">
-                                <img src="imagenes.ayx/img_01.jpg" alt="El Comienzo" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                                <span class="absolute bottom-2 left-2 bg-black/60 backdrop-blur-md text-white text-[9px] px-2 py-0.5 rounded-md">25 Sep 2024</span>
-                            </div>
-                            <h4 class="text-xs font-bold text-gray-800 text-center truncate">El Comienzo</h4>
-                            <p class="text-[10px] text-gray-500 text-center truncate">Donde todo inició</p>
-                        </div>
-
-                        <div onclick="openPhotoModal('imagenes.ayx/img_02.jpg', 'Aventura Juntos', 'Cada chispa y momento compartido a tu lado enciende mi vida de luz y alegría.')" class="polaroid rounded-2xl cursor-pointer group">
-                            <div class="relative aspect-square rounded-xl overflow-hidden mb-2">
-                                <img src="imagenes.ayx/img_02.jpg" alt="Aventura Juntos" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                                <span class="absolute bottom-2 left-2 bg-black/60 backdrop-blur-md text-white text-[9px] px-2 py-0.5 rounded-md">Luces & Magia</span>
-                            </div>
-                            <h4 class="text-xs font-bold text-gray-800 text-center truncate">Aventura Juntos</h4>
-                            <p class="text-[10px] text-gray-500 text-center truncate">Momentos mágicos</p>
-                        </div>
-
-                        <div onclick="openPhotoModal('imagenes.ayx/img_03.jpg', 'Siempre Juntos', 'Por cada paso dado en este camino y todos los que nos faltan por recorrer tomados de la mano.')" class="polaroid rounded-2xl cursor-pointer group">
-                            <div class="relative aspect-square rounded-xl overflow-hidden mb-2">
-                                <img src="imagenes.ayx/img_03.jpg" alt="Siempre Juntos" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                                <span class="absolute bottom-2 left-2 bg-black/60 backdrop-blur-md text-white text-[9px] px-2 py-0.5 rounded-md">Eternidad</span>
-                            </div>
-                            <h4 class="text-xs font-bold text-gray-800 text-center truncate">Siempre Juntos</h4>
-                            <p class="text-[10px] text-gray-500 text-center truncate">De la mano siempre</p>
-                        </div>
-
-                        <div onclick="openPhotoModal('imagenes.ayx/img_04.jpg', 'Tu Sonrisa', 'Tienes la magia de alegrar todos mis días con solo una mirada y tu hermosa sonrisa.')" class="polaroid rounded-2xl cursor-pointer group">
-                            <div class="relative aspect-square rounded-xl overflow-hidden mb-2">
-                                <img src="imagenes.ayx/img_04.jpg" alt="Tu Sonrisa" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                                <span class="absolute bottom-2 left-2 bg-black/60 backdrop-blur-md text-white text-[9px] px-2 py-0.5 rounded-md">Mi Favorita</span>
-                            </div>
-                            <h4 class="text-xs font-bold text-gray-800 text-center truncate">Tu Sonrisa</h4>
-                            <p class="text-[10px] text-gray-500 text-center truncate">Mi lugar feliz</p>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Secret Envelope / Romantic Letter -->
-                <section class="mb-12 text-center">
-                    <h2 class="text-2xl font-bold text-rose-700 mb-1">Una Carta Para Ti</h2>
-                    <p class="text-xs text-gray-500 mb-6">Toca el sobre para abrir tu mensaje especial</p>
-
-                    <div class="envelope-wrapper my-4">
-                        <div class="envelope" id="envelope" onclick="toggleEnvelope()">
-                            <div class="envelope-flap"></div>
-                            <div class="letter text-left text-gray-700 space-y-3">
-                                <div class="text-center border-b border-rose-100 pb-2 mb-2">
-                                    <span class="font-cursive text-3xl text-rose-600 font-bold">Mi Vida Hermosa,</span>
-                                </div>
-                                <p class="text-xs leading-relaxed text-gray-600">
-                                    ¿Por dónde empiezo 🥹?... Nunca supe de dónde surge el dicho del amor a primera vista, y hasta hace no mucho yo no era de la idea de que pudiera existir algo así 🥹🥹🥹. Sorprendentemente me equivoqué.
-                                </p>
-                                <p class="text-xs leading-relaxed text-gray-600">
-                                    Si alguien me hubiera dicho que tras un cruce de miradas accidental terminaría conociendo al amor de mi vida, y además de eso que tendría una de las relaciones más bonitas de mi vida, diría que es imposible 🥹🥹. Pero me alegra haberme equivocado 😊.
-                                </p>
-                                <p class="text-xs leading-relaxed text-gray-600">
-                                    Es inexplicable saber cómo es que con tan solo ver por primera vez esos ojos tan lindos terminé perdiéndome en esa mirada 🥺💘. Al recordarlo es como si en ese instante se hubiera detenido el tiempo, y pudiera ver a través de esos ojos todo lo que hemos vivido juntos.
-                                </p>
-                                <p class="text-xs leading-relaxed text-gray-600">
-                                    Recuerdo muy bien que días después de ese flechazo con la mirada, tu mejor amiga Amaya fue a pedirme mi IG por ti. Siendo sincero, ese día no recordaba mi Instagram y no sé si por pena, por nervios o por no saber si de verdad querías saber de mí, no creía que de verdad te hubieras interesado en mí. Me costó trabajo aceptar la propuesta, no recordaba mi IG y no traía datos 🥲.
-                                </p>
-                                <p class="text-xs leading-relaxed text-gray-600">
-                                    Maya me pasó tu IG. En el transcurso del día me olvidé por completo de enviarte la solicitud, pero al día siguiente Amaya me regañó y me dijo que por qué no te la había mandado 🥹. Te la envié y solo necesitaba esperar a que me regresaras el follow. Regresando de jugar con mis amigos, le dije a mi mejor amigo que si me arriesgaba a mandarte mensaje... 🥹🥹🥹
-                                </p>
-                                <p class="text-xs leading-relaxed text-gray-600">
-                                    Tú sabes que vengo de bastantes relaciones donde salí lastimado y lo que menos quería era que volviera a suceder, pero aún así me arriesgué. Ese 25 de septiembre escribí el primer hola que empezó esta hermosa historia 🥹🥺💖💞. Hablar diario se hizo costumbre, y de la noche a la mañana dejamos de ser extraños 🥹🥹.
-                                </p>
-                                <p class="text-xs leading-relaxed text-gray-600">
-                                    Las conversaciones interminables que se extendían hasta las 12 de la noche me hicieron conocerte y entender que la vida nos había tratado mal para encontrarnos, y tratar de ayudarte a sanar tus heridas e inseguridades 🥹🥹🤧.
-                                </p>
-                                <p class="text-xs leading-relaxed text-gray-600">
-                                    Pasamos a las pláticas en persona. Fue difícil para ambos porque a ti te daba pena y yo seguía siendo muy reservado y serio 🥹🥺🥹. Te tocó ver cómo me derrumbé en la escuela por problemas personales, y aún sin ser nada, me ayudaste. Eso me enamoró aún más de ti 🥹🥹🥹. Cada pequeña acción me enamoraba más de ti y de esa niña en tu interior que me demostraba que aún existían personas con un buen corazón 🥹🥺❤️‍🩹❤️‍🩹.
-                                </p>
-                                <p class="text-xs leading-relaxed text-gray-600">
-                                    Llegó mi cumple, un día que no esperaba nada, y tú llegaste a alegrarme el día con un detalle enorme: una lata de mi bebida favorita, un chocolate, unos lápices para dibujar y la primera carta que me diste, que atesoraré por siempre ❤️‍🩹💖. Eso me hizo sentir seguro a tu lado 🥺🥺🥺.
-                                </p>
-                                <p class="text-xs leading-relaxed text-gray-600">
-                                    Se acercaba el cumple de Amaya; tú pensabas que no iría, pero hice lo posible por darte una sorpresa. Cuando me viste entrar, el brillo de tu mirar y lo preciosa que te veías me robaron el aliento 🥹🥹💘. Sé que estar juntos te hacía mucha ilusión 🥹😊.
-                                </p>
-                                <p class="text-xs leading-relaxed text-gray-600">
-                                    Me pediste acompañarte a conocer a tus papás y, aunque me dieron nervios 😅, me armé de valor para hacer las cosas bien 😼. Prometí ir a platicar con ellos y a los pocos días estaba en tu casa presentándome formalmente frente a tus papás. De ahí lo demás es historia 🥹🥹🥹...
-                                </p>
-                                <p class="text-xs leading-relaxed text-gray-600">
-                                    Pasamos nuestra primera Navidad y Año Nuevo 🥹👩🏻‍❤️‍💋‍👨🏻🎇. En Reyes te di tu primer regalo: un peluche de Stitch disfrazado de panda. Tuvimos nuestra primera salida al cine y aunque me gasté el dinero pagando la entrada de los 5 que íbamos 😅😅😅, disfruté mucho estar contigo. Reflexioné y el 2 de febrero de 2025 te pedí ser mi novia 💍🥺; nunca me arrepentiré de hacerlo.
-                                </p>
-                                <p class="text-xs leading-relaxed text-gray-600">
-                                    Llegó San Valentín, tu cumpleaños y meses después conociste al resto de mi familia. Pasamos por infinitas situaciones; estar contigo me sensibilizó y mi misión de todos los días se convirtió en verte sonreír ☺️🥹 y hacer sentir segura a mi nenita preciosa 🥺.
-                                </p>
-                                <p class="text-xs leading-relaxed text-gray-600">
-                                    Pasamos momentos difíciles pero el amor nos mantiene firmes. Nos levantamos mutuamente 🫂. No podría estar más agradecido con la vida y el destino por mantenernos unidos. Espero que nunca olvides que mi motivación de cada día es verte sonreír y ver brillar el café de esos lindos ojos que tienes 🥹💘💘💘. Te amo mucho mi vida hermosa, nunca lo olvides piojitos 🪳🫶🏻💗.
-                                </p>
-                                <div class="text-right font-cursive text-2xl text-rose-600 pt-2">
-                                    Att: Tu nenito el más guapo 🥹😁😚💗
-                                </div>
-                            </div>
-                            <div class="envelope-front"></div>
-                            <div class="absolute inset-0 flex items-center justify-center z-10 pointer-events-none" id="envelopeHeart">
-                                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg border border-rose-200">
-                                    <i class="fa-solid fa-heart text-rose-500 text-lg"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Interactive Timeline -->
-                <section class="glass-card rounded-3xl p-6 mb-10 border border-white/80">
-                    <h2 class="text-xl font-bold text-rose-700 text-center mb-6 flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-timeline text-rose-500"></i> Línea del Tiempo
-                    </h2>
-
-                    <div class="relative border-l-2 border-rose-200 ml-3 md:ml-5 space-y-6">
-                        
-                        <div class="relative pl-6 group">
-                            <div class="absolute -left-[9px] top-0.5 w-4 h-4 rounded-full bg-rose-500 border-4 border-white shadow-sm"></div>
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-100">25 de septiembre de 2024</span>
-                            <h3 class="text-sm font-bold text-gray-800 mt-1">El Comienzo</h3>
-                            <p class="text-xs text-gray-600 mt-0.5">Fecha en que empezamos a hablar 💘❤️‍🩹</p>
-                        </div>
-
-                        <div class="relative pl-6 group">
-                            <div class="absolute -left-[9px] top-0.5 w-4 h-4 rounded-full bg-rose-500 border-4 border-white shadow-sm"></div>
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-100">27 de noviembre de 2024</span>
-                            <h3 class="text-sm font-bold text-gray-800 mt-1">Tu Cumpleaños</h3>
-                            <p class="text-xs text-gray-600 mt-0.5">El primer cumpleaños mío en el que estuviste presente 🫂💕</p>
-                        </div>
-
-                        <div class="relative pl-6 group">
-                            <div class="absolute -left-[9px] top-0.5 w-4 h-4 rounded-full bg-rose-500 border-4 border-white shadow-sm"></div>
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-100">06 de diciembre de 2024</span>
-                            <h3 class="text-sm font-bold text-gray-800 mt-1">Conociendo a tus Papás</h3>
-                            <p class="text-xs text-gray-600 mt-0.5">El día que conocí a tus papás en la fiesta de Maya 🧔🏻👩🏼🎉</p>
-                        </div>
-
-                        <div class="relative pl-6 group">
-                            <div class="absolute -left-[9px] top-0.5 w-4 h-4 rounded-full bg-rose-500 border-4 border-white shadow-sm"></div>
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-100">09 de diciembre de 2024</span>
-                            <h3 class="text-sm font-bold text-gray-800 mt-1">Presentación Formal</h3>
-                            <p class="text-xs text-gray-600 mt-0.5">Me presenté formalmente con tus papás</p>
-                        </div>
-
-                        <div class="relative pl-6 group">
-                            <div class="absolute -left-[9px] top-0.5 w-4 h-4 rounded-full bg-rose-500 border-4 border-white shadow-sm"></div>
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-100">24 de diciembre de 2024</span>
-                            <h3 class="text-sm font-bold text-gray-800 mt-1">Nuestra Primer Navidad</h3>
-                            <p class="text-xs text-gray-600 mt-0.5">Nuestra primer navidad juntos, y la primera vez que cené en tu casa 🎄🎇🍛</p>
-                        </div>
-
-                        <div class="relative pl-6 group">
-                            <div class="absolute -left-[9px] top-0.5 w-4 h-4 rounded-full bg-rose-500 border-4 border-white shadow-sm"></div>
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-100">31 de diciembre de 2024</span>
-                            <h3 class="text-sm font-bold text-gray-800 mt-1">Año Nuevo</h3>
-                            <p class="text-xs text-gray-600 mt-0.5">La primera noche de año nuevo que pasamos juntos 🌟🌕🎇</p>
-                        </div>
-
-                        <div class="relative pl-6 group">
-                            <div class="absolute -left-[9px] top-0.5 w-4 h-4 rounded-full bg-rose-500 border-4 border-white shadow-sm"></div>
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-100">07 de enero de 2025</span>
-                            <h3 class="text-sm font-bold text-gray-800 mt-1">Regalo de Reyes</h3>
-                            <p class="text-xs text-gray-600 mt-0.5">La primera vez que te regalé un peluche, tu regalo de reyes 🎁🧸🤴🏼</p>
-                        </div>
-
-                        <div class="relative pl-6 group">
-                            <div class="absolute -left-[9px] top-0.5 w-4 h-4 rounded-full bg-rose-500 border-4 border-white shadow-sm"></div>
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-100">25 de enero de 2025</span>
-                            <h3 class="text-sm font-bold text-gray-800 mt-1">Primera Salida al Cine</h3>
-                            <p class="text-xs text-gray-600 mt-0.5">Nuestra primera salida al cine 📽️🦁</p>
-                        </div>
-
-                        <div class="relative pl-6 group">
-                            <div class="absolute -left-[9px] top-0.5 w-4 h-4 rounded-full bg-rose-500 border-4 border-white shadow-sm"></div>
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-100">02 de febrero de 2025</span>
-                            <h3 class="text-sm font-bold text-gray-800 mt-1">¡Novios!</h3>
-                            <p class="text-xs text-gray-600 mt-0.5">El día que te pedí que fueras mi novia ✨💍💘</p>
-                        </div>
-
-                        <div class="relative pl-6 group">
-                            <div class="absolute -left-[9px] top-0.5 w-4 h-4 rounded-full bg-rose-500 border-4 border-white shadow-sm"></div>
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-100">14 de febrero de 2025</span>
-                            <h3 class="text-sm font-bold text-gray-800 mt-1">San Valentín</h3>
-                            <p class="text-xs text-gray-600 mt-0.5">Nuestro primer día de San Valentín ✨💘🎁</p>
-                        </div>
-
-                        <div class="relative pl-6 group">
-                            <div class="absolute -left-[9px] top-0.5 w-4 h-4 rounded-full bg-rose-500 border-4 border-white shadow-sm"></div>
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-100">25 de marzo de 2025</span>
-                            <h3 class="text-sm font-bold text-gray-800 mt-1">Tu Cumpleaños</h3>
-                            <p class="text-xs text-gray-600 mt-0.5">El primer cumpleaños tuyo en el que estuve presente 🎂💖🎁</p>
-                        </div>
-
-                        <div class="relative pl-6 group">
-                            <div class="absolute -left-[9px] top-0.5 w-4 h-4 rounded-full bg-rose-500 border-4 border-white shadow-sm"></div>
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-100">15 de septiembre de 2025</span>
-                            <h3 class="text-sm font-bold text-gray-800 mt-1">Fiestas Patrias</h3>
-                            <p class="text-xs text-gray-600 mt-0.5">El primer día festivo que pasaste en mi casa, y conociste al resto de mi familia 🎉🎆</p>
-                        </div>
-
-                        <div class="relative pl-6 group">
-                            <div class="absolute -left-[9px] top-0.5 w-4 h-4 rounded-full bg-rose-500 border-4 border-white shadow-sm"></div>
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-100">25 de septiembre de 2025</span>
-                            <h3 class="text-sm font-bold text-gray-800 mt-1">Aniversario de Conocernos</h3>
-                            <p class="text-xs text-gray-600 mt-0.5">Nuestro primer aniversario de conocernos ✨💖👩🏻‍❤️‍👨🏻</p>
-                        </div>
-
-                        <div class="relative pl-6 group">
-                            <div class="absolute -left-[9px] top-0.5 w-4 h-4 rounded-full bg-rose-500 border-4 border-white shadow-sm"></div>
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-100">27 de noviembre de 2025</span>
-                            <h3 class="text-sm font-bold text-gray-800 mt-1">Detalle Especial</h3>
-                            <p class="text-xs text-gray-600 mt-0.5">Me regalaste el primer peluche de mi vida 🧸🎁💖</p>
-                        </div>
-
-                        <div class="relative pl-6 group">
-                            <div class="absolute -left-[9px] top-0.5 w-4 h-4 rounded-full bg-rose-500 border-4 border-white shadow-sm"></div>
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-100">29 de noviembre de 2025</span>
-                            <h3 class="text-sm font-bold text-gray-800 mt-1">Cine de Cumpleaños</h3>
-                            <p class="text-xs text-gray-600 mt-0.5">Fuimos al cine por mi cumpleaños 📽️ 🦊🐰</p>
-                        </div>
-
-                        <div class="relative pl-6 group">
-                            <div class="absolute -left-[9px] top-0.5 w-4 h-4 rounded-full bg-rose-500 border-4 border-white shadow-sm"></div>
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-100">24 de diciembre de 2025</span>
-                            <h3 class="text-sm font-bold text-gray-800 mt-1">Segunda Navidad</h3>
-                            <p class="text-xs text-gray-600 mt-0.5">La segunda navidad juntos y la segunda que pasé en tu casa 👩🏻‍❤️‍👨🏻🎄🎇</p>
-                        </div>
-
-                        <div class="relative pl-6 group">
-                            <div class="absolute -left-[9px] top-0.5 w-4 h-4 rounded-full bg-rose-500 border-4 border-white shadow-sm"></div>
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-100">31 de diciembre de 2025</span>
-                            <h3 class="text-sm font-bold text-gray-800 mt-1">Año Nuevo en Familia</h3>
-                            <p class="text-xs text-gray-600 mt-0.5">La primer noche de año nuevo que pasaste conmigo y mi familia 🧑‍🧑‍🧒💞🎇</p>
-                        </div>
-
-                        <div class="relative pl-6 group">
-                            <div class="absolute -left-[9px] top-0.5 w-4 h-4 rounded-full bg-rose-500 border-4 border-white shadow-sm"></div>
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-100">02 de febrero de 2026</span>
-                            <h3 class="text-sm font-bold text-gray-800 mt-1">Aniversario de Novios</h3>
-                            <p class="text-xs text-gray-600 mt-0.5">Nuestro primer aniversario de novios 💍💘📈</p>
-                        </div>
-
-                        <div class="relative pl-6 group">
-                            <div class="absolute -left-[9px] top-0.5 w-4 h-4 rounded-full bg-rose-500 border-4 border-white shadow-sm"></div>
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-100">14 de febrero de 2026</span>
-                            <h3 class="text-sm font-bold text-gray-800 mt-1">San Valentín</h3>
-                            <p class="text-xs text-gray-600 mt-0.5">Nuestro segundo San Valentín juntos 💖💘🧸</p>
-                        </div>
-
-                        <div class="relative pl-6 group">
-                            <div class="absolute -left-[9px] top-0.5 w-4 h-4 rounded-full bg-rose-500 border-4 border-white shadow-sm"></div>
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-100">25 de marzo de 2026</span>
-                            <h3 class="text-sm font-bold text-gray-800 mt-1">Tu Cumpleaños</h3>
-                            <p class="text-xs text-gray-600 mt-0.5">El segundo cumpleaños tuyo en el que estuve presente 🎂🎁🐧💖</p>
-                        </div>
-
-                        <div class="relative pl-6 group">
-                            <div class="absolute -left-[9px] top-0.5 w-4 h-4 rounded-full bg-rose-500 border-4 border-white shadow-sm"></div>
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-100">25 de septiembre de 2026</span>
-                            <h3 class="text-sm font-bold text-gray-800 mt-1">Segundo Aniversario</h3>
-                            <p class="text-xs text-gray-600 mt-0.5">Segundo aniversario de conocernos 💖💘👩🏻‍❤️‍👨🏻👩🏻‍❤️‍👨🏻</p>
-                        </div>
-
-                        <!-- Cierre de la línea del tiempo -->
-                        <div class="relative pl-6 group">
-                            <div class="absolute -left-[9px] top-0.5 w-4 h-4 rounded-full bg-rose-500 border-4 border-white shadow-sm"></div>
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-100">El Futuro</span>
-                            <h3 class="text-sm font-bold text-gray-800 mt-1">Nuevas Aventuras</h3>
-                            <p class="text-xs text-gray-600 mt-0.5 leading-relaxed">
-                                A pocos meses de terminar el 2026, espero seguir expandiendo esta línea del tiempo con nuevas aventuras a tu lado 💘🫂👥👩🏻‍❤️‍💋‍👨🏻, y en espera de un 2027 en el que por fin pueda darte el anillo de promesa que tengo para ti 💍💖🥺.
-                            </p>
-                        </div>
-
-                    </div>
-                </section>
+                <p class="text-[11px] text-gray-500 mt-4 italic">Desde el 25 de Septiembre de 2024... y contando para siempre ❤️</p>
             </div>
 
+            <p class="text-sm text-gray-600 mb-8 italic">"Cada segundo a tu lado es mi momento favorito del día."</p>
 
-            <!-- ==================== SECCIÓN 2: QUIZ / TRIVIA DE AMOR (13 Preguntas) ==================== -->
-            <div id="tabQuiz" class="hidden">
-                <div class="text-center mb-6">
-                    <div class="inline-block p-2 px-4 rounded-full bg-purple-100 text-purple-600 text-xs font-semibold tracking-wider uppercase mb-2 shadow-sm border border-purple-200">
-                        <i class="fa-solid fa-graduation-cap mr-1"></i> ¿Cuánto Recuerdas?
-                    </div>
-                    <h2 class="text-4xl font-bold font-cursive text-rose-600">Quiz de Nuestra Historia</h2>
-                    <p class="text-xs text-gray-500 mt-1">Responde estas 13 preguntas especiales sobre nosotros ❤️</p>
-                </div>
-
-                <!-- Score Banner -->
-                <div class="glass-card rounded-2xl p-4 mb-6 flex items-center justify-between border border-white/80">
-                    <div class="text-xs font-bold text-gray-700">Puntaje Obtenido:</div>
-                    <div class="bg-rose-500 text-white font-extrabold text-sm px-3 py-1 rounded-full shadow-sm">
-                        <span id="quizScore">0</span> / 13
-                    </div>
-                </div>
-
-                <!-- Questions List -->
-                <div class="space-y-6">
-                    
-                    <!-- Pregunta 1 -->
-                    <div class="glass-card rounded-2xl p-5 border border-white/80">
-                        <h3 class="text-xs font-bold text-rose-600 uppercase mb-1">Pregunta 1</h3>
-                        <p class="text-sm font-semibold text-gray-800 mb-3">¿Cuándo comenzamos a hablar?</p>
-                        <div class="grid grid-cols-1 gap-2 text-xs">
-                            <button onclick="checkAnswer(this, true)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">25 de septiembre de 2024</button>
-                            <button onclick="checkAnswer(this, false)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">15 de octubre de 2024</button>
-                            <button onclick="checkAnswer(this, false)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">1 de septiembre de 2024</button>
-                        </div>
-                    </div>
-
-                    <!-- Pregunta 2 -->
-                    <div class="glass-card rounded-2xl p-5 border border-white/80">
-                        <h3 class="text-xs font-bold text-rose-600 uppercase mb-1">Pregunta 2</h3>
-                        <p class="text-sm font-semibold text-gray-800 mb-3">¿Cuándo te pedí que fueras mi novia?</p>
-                        <div class="grid grid-cols-1 gap-2 text-xs">
-                            <button onclick="checkAnswer(this, false)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">14 de febrero de 2025</button>
-                            <button onclick="checkAnswer(this, true)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">2 de febrero de 2025</button>
-                            <button onclick="checkAnswer(this, false)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">25 de diciembre de 2024</button>
-                        </div>
-                    </div>
-
-                    <!-- Pregunta 3 -->
-                    <div class="glass-card rounded-2xl p-5 border border-white/80">
-                        <h3 class="text-xs font-bold text-rose-600 uppercase mb-1">Pregunta 3</h3>
-                        <p class="text-sm font-semibold text-gray-800 mb-3">¿Cuándo conocí a tus papás?</p>
-                        <div class="grid grid-cols-1 gap-2 text-xs">
-                            <button onclick="checkAnswer(this, false)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">20 de noviembre de 2024</button>
-                            <button onclick="checkAnswer(this, false)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">24 de diciembre de 2024</button>
-                            <button onclick="checkAnswer(this, true)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">6 de diciembre de 2024</button>
-                        </div>
-                    </div>
-
-                    <!-- Pregunta 4 -->
-                    <div class="glass-card rounded-2xl p-5 border border-white/80">
-                        <h3 class="text-xs font-bold text-rose-600 uppercase mb-1">Pregunta 4</h3>
-                        <p class="text-sm font-semibold text-gray-800 mb-3">¿Por qué fue la primera vez que fui a tu casa?</p>
-                        <div class="grid grid-cols-1 gap-2 text-xs">
-                            <button onclick="checkAnswer(this, true)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">Hicimos un proyecto de química</button>
-                            <button onclick="checkAnswer(this, false)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">Para ver una película</button>
-                            <button onclick="checkAnswer(this, false)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">Para celebrar un cumpleaños</button>
-                        </div>
-                    </div>
-
-                    <!-- Pregunta 5 -->
-                    <div class="glass-card rounded-2xl p-5 border border-white/80">
-                        <h3 class="text-xs font-bold text-rose-600 uppercase mb-1">Pregunta 5</h3>
-                        <p class="text-sm font-semibold text-gray-800 mb-3">¿Cuándo fue la primera vez que te traje a conocer a mi familia?</p>
-                        <div class="grid grid-cols-1 gap-2 text-xs">
-                            <button onclick="checkAnswer(this, false)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">Un 1 de noviembre</button>
-                            <button onclick="checkAnswer(this, true)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">Un 15 de septiembre</button>
-                            <button onclick="checkAnswer(this, false)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">Un 31 de diciembre</button>
-                        </div>
-                    </div>
-
-                    <!-- Pregunta 6 -->
-                    <div class="glass-card rounded-2xl p-5 border border-white/80">
-                        <h3 class="text-xs font-bold text-rose-600 uppercase mb-1">Pregunta 6</h3>
-                        <p class="text-sm font-semibold text-gray-800 mb-3">¿Qué fue la primera cosa que cocinamos juntos?</p>
-                        <div class="grid grid-cols-1 gap-2 text-xs">
-                            <button onclick="checkAnswer(this, false)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">Una pizza casera</button>
-                            <button onclick="checkAnswer(this, false)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">Unos tacos</button>
-                            <button onclick="checkAnswer(this, true)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">Un ramen</button>
-                        </div>
-                    </div>
-
-                    <!-- Pregunta 7 -->
-                    <div class="glass-card rounded-2xl p-5 border border-white/80">
-                        <h3 class="text-xs font-bold text-rose-600 uppercase mb-1">Pregunta 7</h3>
-                        <p class="text-sm font-semibold text-gray-800 mb-3">¿Con qué animales representamos nuestro amor?</p>
-                        <div class="grid grid-cols-1 gap-2 text-xs">
-                            <button onclick="checkAnswer(this, true)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">Pingüinos 🐧</button>
-                            <button onclick="checkAnswer(this, false)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">Ositos 🐻</button>
-                            <button onclick="checkAnswer(this, false)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">Gatitos 🐱</button>
-                        </div>
-                    </div>
-
-                    <!-- Pregunta 8 -->
-                    <div class="glass-card rounded-2xl p-5 border border-white/80">
-                        <h3 class="text-xs font-bold text-rose-600 uppercase mb-1">Pregunta 8</h3>
-                        <p class="text-sm font-semibold text-gray-800 mb-3">¿Cuáles son los hobbies que hacemos cada que nos vemos?</p>
-                        <div class="grid grid-cols-1 gap-2 text-xs">
-                            <button onclick="checkAnswer(this, false)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">Ir a correr o bailar</button>
-                            <button onclick="checkAnswer(this, true)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">Ver películas o pintar 🎨🎬</button>
-                            <button onclick="checkAnswer(this, false)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">Jugar videojuegos</button>
-                        </div>
-                    </div>
-
-                    <!-- Pregunta 9 -->
-                    <div class="glass-card rounded-2xl p-5 border border-white/80">
-                        <h3 class="text-xs font-bold text-rose-600 uppercase mb-1">Pregunta 9</h3>
-                        <p class="text-sm font-semibold text-gray-800 mb-3">¿Qué fue el primer regalo de cumpleaños que te di?</p>
-                        <div class="grid grid-cols-1 gap-2 text-xs">
-                            <button onclick="checkAnswer(this, true)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">Unas flores y un peluche 💐🧸</button>
-                            <button onclick="checkAnswer(this, false)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">Un collar de plata</button>
-                            <button onclick="checkAnswer(this, false)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">Una caja de chocolates</button>
-                        </div>
-                    </div>
-
-                    <!-- Pregunta 10 -->
-                    <div class="glass-card rounded-2xl p-5 border border-white/80">
-                        <h3 class="text-xs font-bold text-rose-600 uppercase mb-1">Pregunta 10</h3>
-                        <p class="text-sm font-semibold text-gray-800 mb-3">¿Cuántas veces hemos ido al cine?</p>
-                        <div class="grid grid-cols-1 gap-2 text-xs">
-                            <button onclick="checkAnswer(this, false)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">1 vez</button>
-                            <button onclick="checkAnswer(this, true)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">2 veces 🍿🎬</button>
-                            <button onclick="checkAnswer(this, false)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">4 veces</button>
-                        </div>
-                    </div>
-
-                    <!-- Pregunta 11 -->
-                    <div class="glass-card rounded-2xl p-5 border border-white/80">
-                        <h3 class="text-xs font-bold text-rose-600 uppercase mb-1">Pregunta 11</h3>
-                        <p class="text-sm font-semibold text-gray-800 mb-3">¿A quién conociste primero, a mi mamá o a mi papá?</p>
-                        <div class="grid grid-cols-1 gap-2 text-xs">
-                            <button onclick="checkAnswer(this, true)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">A mi papá 👨‍👧</button>
-                            <button onclick="checkAnswer(this, false)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">A mi mamá</button>
-                            <button onclick="checkAnswer(this, false)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">A los dos al mismo tiempo</button>
-                        </div>
-                    </div>
-
-                    <!-- Pregunta 12 -->
-                    <div class="glass-card rounded-2xl p-5 border border-white/80">
-                        <h3 class="text-xs font-bold text-rose-600 uppercase mb-1">Pregunta 12</h3>
-                        <p class="text-sm font-semibold text-gray-800 mb-3">¿Dónde fue la primera vez que nos besamos de verdad?</p>
-                        <div class="grid grid-cols-1 gap-2 text-xs">
-                            <button onclick="checkAnswer(this, false)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">En el parque</button>
-                            <button onclick="checkAnswer(this, true)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">En la fiesta de XV de Maya 💃🎉</button>
-                            <button onclick="checkAnswer(this, false)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">En la escuela</button>
-                        </div>
-                    </div>
-
-                    <!-- Pregunta 13 -->
-                    <div class="glass-card rounded-2xl p-5 border border-white/80">
-                        <h3 class="text-xs font-bold text-rose-600 uppercase mb-1">Pregunta 13</h3>
-                        <p class="text-sm font-semibold text-gray-800 mb-3">En caso de que en un futuro podamos tener un hijo, ¿cuáles son los 2 nombres de niño que acordamos?</p>
-                        <div class="grid grid-cols-1 gap-2 text-xs">
-                            <button onclick="checkAnswer(this, false)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">Mateo Alexander</button>
-                            <button onclick="checkAnswer(this, false)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">Santiago David</button>
-                            <button onclick="checkAnswer(this, true)" class="quiz-opt p-3 text-left rounded-xl bg-white/80 border border-rose-100 hover:bg-rose-50 font-medium">Joao Antonio 👶❤️</button>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Final Surprise Message -->
-                <div id="quizSuccessMsg" class="hidden glass-card rounded-3xl p-6 mt-8 text-center border-2 border-rose-400 bg-rose-50/90 shadow-xl">
-                    <div class="w-12 h-12 bg-rose-500 text-white rounded-full flex items-center justify-center text-xl mx-auto mb-3 shadow-md">
-                        <i class="fa-solid fa-award"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold font-cursive text-rose-600">¡Memoria Perfecta! ❤️</h3>
-                    <p class="text-xs text-gray-700 mt-2 leading-relaxed">
-                        ¡Recordaste cada detalle a la perfección! Demuestra lo especial que es todo lo que hemos vivido juntos.
-                    </p>
-                </div>
-            </div>
-
-            <!-- Footer -->
-            <footer class="text-center text-xs text-rose-400 py-6 font-light">
-                Creado especialmente para ti ❤️
-            </footer>
-
-        </main>
-    </section>
-
-    <!-- Photo Zoom Modal Dialog -->
-    <div id="photoModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-xs w-full p-4 relative overflow-hidden shadow-2xl">
-            <button onclick="closePhotoModal()" class="absolute top-3 right-3 w-8 h-8 bg-gray-100 text-gray-600 rounded-full flex items-center justify-center hover:bg-rose-100 hover:text-rose-600 transition">
-                <i class="fa-solid fa-xmark"></i>
+            <button onclick="goToPage(2)" class="w-full py-4 bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-semibold rounded-2xl shadow-lg shadow-rose-300/50 transition-all duration-300 flex items-center justify-center gap-2 group">
+                <span>Entrar a nuestra carta virtual</span>
+                <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
             </button>
-            <div class="rounded-2xl overflow-hidden aspect-square mb-3">
-                <img id="modalImg" src="" alt="Foto ampliada" class="w-full h-full object-cover">
-            </div>
-            <h3 id="modalTitle" class="text-sm font-bold text-gray-800"></h3>
-            <p id="modalDesc" class="text-xs text-gray-600 mt-1"></p>
         </div>
     </div>
 
-    <!-- JavaScript Application Logic -->
-    <script>
-        // 1. Navigation Between Main Pages
-        function goToPage2(targetTab) {
-            const page1 = document.getElementById('page1');
-            const page2 = document.getElementById('page2');
 
-            page1.classList.remove('page-active');
-            page1.classList.add('page-hidden');
+    <!-- ========================================== -->
+    <!-- PÁGINA 2: CONTENIDO COMPLETO Y GALERÍA     -->
+    <!-- ========================================== -->
+    <div id="page2" class="page page-hidden min-h-screen pb-16 relative z-10">
+        
+        <!-- HEADER FIJO -->
+        <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-pink-100 px-6 py-4 flex justify-between items-center shadow-sm">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-heart text-rose-500 text-xl"></i>
+                <h2 class="font-cursive text-2xl font-bold text-rose-600">Tú y Yo</h2>
+            </div>
+            <button onclick="goToPage(1)" class="text-xs font-semibold bg-rose-50 text-rose-600 px-3 py-1.5 rounded-full hover:bg-rose-100 transition flex items-center gap-1">
+                <i class="fa-solid fa-house"></i> Inicio
+            </button>
+        </header>
 
-            setTimeout(() => {
-                page2.classList.remove('page-hidden');
-                page2.classList.add('page-active');
-                if (targetTab) switchTab(targetTab);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }, 400);
-        }
+        <main class="max-w-md mx-auto p-4 space-y-6 mt-2">
 
-        function goToPage1() {
-            const page1 = document.getElementById('page1');
-            const page2 = document.getElementById('page2');
-
-            page2.classList.remove('page-active');
-            page2.classList.add('page-hidden');
-
-            setTimeout(() => {
-                page1.classList.remove('page-hidden');
-                page1.classList.add('page-active');
-            }, 400);
-        }
-
-        // 2. Switch Tabs Inside Page 2
-        function switchTab(tabName) {
-            const tabStory = document.getElementById('tabStory');
-            const tabQuiz = document.getElementById('tabQuiz');
-            const tabStoryBtn = document.getElementById('tabStoryBtn');
-            const tabQuizBtn = document.getElementById('tabQuizBtn');
-
-            if (tabName === 'story') {
-                tabStory.classList.remove('hidden');
-                tabQuiz.classList.add('hidden');
+            <!-- CARTA PRINCIPAL INTERACTIVA (DESPLEGABLE) -->
+            <div class="glass-card p-6 rounded-3xl shadow-xl border border-rose-100 text-center relative overflow-hidden">
+                <span class="bg-rose-100 text-rose-600 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-3 inline-block">
+                    <i class="fa-solid fa-envelope-open-text mr-1"></i> Una Carta Para Ti
+                </span>
                 
-                tabStoryBtn.className = "px-3 py-1 rounded-full bg-white text-rose-600 shadow-sm transition";
-                tabQuizBtn.className = "px-3 py-1 rounded-full text-gray-600 hover:text-rose-600 transition";
-            } else {
-                tabStory.classList.add('hidden');
-                tabQuiz.classList.remove('hidden');
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Para el amor de mi vida</h3>
+                <p class="text-xs text-gray-500 mb-4">Haz clic en el sobre para abrir mi carta sincera</p>
 
-                tabQuizBtn.className = "px-3 py-1 rounded-full bg-white text-rose-600 shadow-sm transition";
-                tabStoryBtn.className = "px-3 py-1 rounded-full text-gray-600 hover:text-rose-600 transition";
-            }
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+                <div class="envelope-wrapper my-4">
+                    <div id="envelope" class="envelope" onclick="openLetterModal()">
+                        <div class="envelope-flap"></div>
+                        <div class="letter-preview flex flex-col justify-center items-center">
+                            <p class="font-cursive text-2xl text-rose-600">Querida Mena...</p>
+                            <p class="text-[11px] text-gray-400 mt-2">Toca para leer la carta completa ❤️</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TOCADISCOS INTERACTIVO CON MÚSICA DE FONDO -->
+            <div class="glass-card p-6 rounded-3xl shadow-xl border border-rose-100 text-center relative overflow-hidden">
+                <span class="bg-rose-100 text-rose-600 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-2 inline-block">
+                    <i class="fa-solid fa-compact-disc mr-1"></i> Tocadiscos Interactivo
+                </span>
+                
+                <h3 class="text-lg font-bold text-gray-800 mb-1">Toca para reproducir el soundtrack de nuestro amor</h3>
+                <p class="text-xs text-rose-500 font-semibold mb-6">"Tú y Yo" — Motel</p>
+
+                <div class="relative w-52 h-52 mx-auto mb-6 flex items-center justify-center">
+                    <!-- Disco de Vinilo -->
+                    <div id="vinyl" class="w-48 h-48 bg-gray-900 rounded-full border-4 border-gray-800 shadow-2xl flex items-center justify-center relative turntable-disc">
+                        <div class="w-16 h-16 bg-rose-500 rounded-full border-4 border-white/30 flex items-center justify-center shadow-inner">
+                            <i class="fa-solid fa-heart text-white text-lg"></i>
+                        </div>
+                        <!-- LÍNEAS DEL VINILO -->
+                        <div class="absolute inset-2 rounded-full border border-white/10 pointer-events-none"></div>
+                        <div class="absolute inset-6 rounded-full border border-white/5 pointer-events-none"></div>
+                        <div class="absolute inset-10 rounded-full border border-white/10 pointer-events-none"></div>
+                    </div>
+
+                    <!-- Brazo del Tocadiscos -->
+                    <div id="arm" class="absolute -top-1 right-2 w-12 h-28 tonearm pointer-events-none">
+                        <div class="w-3 h-3 bg-gray-400 rounded-full mx-auto shadow"></div>
+                        <div class="w-1.5 h-20 bg-gray-300 mx-auto rounded-full shadow"></div>
+                        <div class="w-4 h-7 bg-gray-700 rounded-sm mx-auto shadow -mt-1"></div>
+                    </div>
+                </div>
+
+                <!-- Botón del Tocadiscos -->
+                <div class="flex items-center justify-center gap-4">
+                    <button id="play-bg-btn" onclick="toggleBgMusic()" class="w-16 h-16 bg-gradient-to-tr from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white rounded-full flex items-center justify-center shadow-lg shadow-rose-300/50 transition-all active:scale-95">
+                        <i id="bg-icon" class="fa-solid fa-play text-2xl ml-1"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- MENSAJE DE VOZ CON ATENUACIÓN DE MÚSICA -->
+            <div class="glass-card p-6 rounded-3xl shadow-xl border border-rose-100 text-center">
+                <span class="bg-pink-100 text-pink-600 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-2 inline-block">
+                    <i class="fa-solid fa-microphone mr-1"></i> Mensaje de Voz
+                </span>
+                
+                <h3 class="text-lg font-bold text-gray-800 mb-1">Nuestro Secreto 💖</h3>
+                <p class="text-xs text-gray-500 mb-4">Un mensaje especial grabado con todo mi corazón</p>
+
+                <button id="voice-btn" onclick="toggleVoiceNote()" class="w-full py-3.5 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 font-semibold rounded-2xl flex items-center justify-center gap-2 transition-all active:scale-98 shadow-sm">
+                    <i id="voice-icon" class="fa-solid fa-play"></i>
+                    <span id="voice-text">Escuchar Mensaje de Voz</span>
+                </button>
+            </div>
+
+            <!-- SECCIÓN DE VIDEOS EN CARRUSEL (CON PLAYSINLINE) -->
+            <div class="glass-card p-6 rounded-3xl shadow-xl border border-rose-100 text-center">
+                <span class="bg-red-100 text-red-600 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-2 inline-block">
+                    <i class="fa-solid fa-video mr-1"></i> Recuerdos en Video
+                </span>
+                
+                <h3 class="text-xl font-bold text-gray-800 mb-1">Revive nuestros recuerdos en video</h3>
+                <p class="text-xs text-gray-500 mb-4">Desliza para ver nuestros momentos grabado en video</p>
+
+                <!-- Reproductores de video optimizados para móvil -->
+                <div class="relative rounded-2xl overflow-hidden bg-black shadow-lg">
+                    <video id="video-player" src="video/vid_01.mp4" controls playsinline webkit-playsinline preload="metadata" class="w-full h-64 object-cover"></video>
+                </div>
+
+                <div class="flex justify-between items-center mt-4 px-2">
+                    <button onclick="changeVideo(-1)" class="w-10 h-10 bg-rose-50 text-rose-600 rounded-full flex items-center justify-center hover:bg-rose-100 transition shadow-sm">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    <span id="video-title" class="text-xs font-semibold text-gray-600">Video 1 de 2</span>
+                    <button onclick="changeVideo(1)" class="w-10 h-10 bg-rose-50 text-rose-600 rounded-full flex items-center justify-center hover:bg-rose-100 transition shadow-sm">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- GALERÍA DE FOTOS COMPLETA (12 IMÁGENES) -->
+            <div class="glass-card p-6 rounded-3xl shadow-xl border border-rose-100">
+                <div class="text-center mb-6">
+                    <span class="bg-rose-100 text-rose-600 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-2 inline-block">
+                        <i class="fa-solid fa-images mr-1"></i> Galería de Fotos
+                    </span>
+                    <h3 class="text-xl font-bold text-gray-800">Nuestros Momentos</h3>
+                    <p class="text-xs text-gray-500">Haz clic en cualquier foto para ver el recuerdo completo</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="relative group overflow-hidden rounded-2xl shadow-md cursor-pointer" onclick="openLightbox('imagenes.ayx/Img_01.jpg')">
+                        <img src="imagenes.ayx/Img_01.jpg" class="object-cover h-44 w-full group-hover:scale-105 transition duration-300">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-90 flex items-end p-2.5">
+                            <span class="text-[10px] text-white font-medium">El Comienzo ❤️</span>
+                        </div>
+                    </div>
+
+                    <div class="relative group overflow-hidden rounded-2xl shadow-md cursor-pointer" onclick="openLightbox('imagenes.ayx/Img_02.jpg')">
+                        <img src="imagenes.ayx/Img_02.jpg" class="object-cover h-44 w-full group-hover:scale-105 transition duration-300">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-90 flex items-end p-2.5">
+                            <span class="text-[10px] text-white font-medium">Aventura Juntos</span>
+                        </div>
+                    </div>
+
+                    <div class="relative group overflow-hidden rounded-2xl shadow-md cursor-pointer" onclick="openLightbox('imagenes.ayx/Img_03.jpg')">
+                        <img src="imagenes.ayx/Img_03.jpg" class="object-cover h-44 w-full group-hover:scale-105 transition duration-300">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-90 flex items-end p-2.5">
+                            <span class="text-[10px] text-white font-medium">Tu Sonrisa</span>
+                        </div>
+                    </div>
+
+                    <div class="relative group overflow-hidden rounded-2xl shadow-md cursor-pointer" onclick="openLightbox('imagenes.ayx/Img_04.jpg')">
+                        <img src="imagenes.ayx/Img_04.jpg" class="object-cover h-44 w-full group-hover:scale-105 transition duration-300">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-90 flex items-end p-2.5">
+                            <span class="text-[10px] text-white font-medium">Días Inolvidables</span>
+                        </div>
+                    </div>
+
+                    <div class="relative group overflow-hidden rounded-2xl shadow-md cursor-pointer" onclick="openLightbox('imagenes.ayx/Img_05.jpg')">
+                        <img src="imagenes.ayx/Img_05.jpg" class="object-cover h-44 w-full group-hover:scale-105 transition duration-300">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-90 flex items-end p-2.5">
+                            <span class="text-[10px] text-white font-medium">Momentos Especiales</span>
+                        </div>
+                    </div>
+
+                    <div class="relative group overflow-hidden rounded-2xl shadow-md cursor-pointer" onclick="openLightbox('imagenes.ayx/Img_06.jpg')">
+                        <img src="imagenes.ayx/Img_06.jpg" class="object-cover h-44 w-full group-hover:scale-105 transition duration-300">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-90 flex items-end p-2.5">
+                            <span class="text-[10px] text-white font-medium">Abrazos Cálidos</span>
+                        </div>
+                    </div>
+
+                    <div class="relative group overflow-hidden rounded-2xl shadow-md cursor-pointer" onclick="openLightbox('imagenes.ayx/Img_07.jpg')">
+                        <img src="imagenes.ayx/Img_07.jpg" class="object-cover h-44 w-full group-hover:scale-105 transition duration-300">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-90 flex items-end p-2.5">
+                            <span class="text-[10px] text-white font-medium">Risas Compartidas</span>
+                        </div>
+                    </div>
+
+                    <div class="relative group overflow-hidden rounded-2xl shadow-md cursor-pointer" onclick="openLightbox('imagenes.ayx/Img_08.jpg')">
+                        <img src="imagenes.ayx/Img_08.jpg" class="object-cover h-44 w-full group-hover:scale-105 transition duration-300">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-90 flex items-end p-2.5">
+                            <span class="text-[10px] text-white font-medium">Mi Lugar Seguro</span>
+                        </div>
+                    </div>
+
+                    <div class="relative group overflow-hidden rounded-2xl shadow-md cursor-pointer" onclick="openLightbox('imagenes.ayx/Img_09.jpg')">
+                        <img src="imagenes.ayx/Img_09.jpg" class="object-cover h-44 w-full group-hover:scale-105 transition duration-300">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-90 flex items-end p-2.5">
+                            <span class="text-[10px] text-white font-medium">Juntos en Todo</span>
+                        </div>
+                    </div>
+
+                    <div class="relative group overflow-hidden rounded-2xl shadow-md cursor-pointer" onclick="openLightbox('imagenes.ayx/Img_10.jpg')">
+                        <img src="imagenes.ayx/Img_10.jpg" class="object-cover h-44 w-full group-hover:scale-105 transition duration-300">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-90 flex items-end p-2.5">
+                            <span class="text-[10px] text-white font-medium">Amor Eterno</span>
+                        </div>
+                    </div>
+
+                    <div class="relative group overflow-hidden rounded-2xl shadow-md cursor-pointer" onclick="openLightbox('imagenes.ayx/Img_11.jpg')">
+                        <img src="imagenes.ayx/Img_11.jpg" class="object-cover h-44 w-full group-hover:scale-105 transition duration-300">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-90 flex items-end p-2.5">
+                            <span class="text-[10px] text-white font-medium">Siempre Juntos</span>
+                        </div>
+                    </div>
+
+                    <div class="relative group overflow-hidden rounded-2xl shadow-md cursor-pointer" onclick="openLightbox('imagenes.ayx/Img_12.jpg')">
+                        <img src="imagenes.ayx/Img_12.jpg" class="object-cover h-44 w-full group-hover:scale-105 transition duration-300">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-90 flex items-end p-2.5">
+                            <span class="text-[10px] text-white font-medium">Por Siempre ❤️</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FOOTER CON MENSAJE -->
+            <div class="text-center py-6 text-xs text-rose-400 font-semibold">
+                <p>Hecho con todo mi amor para ti ❤️</p>
+                <p class="text-[10px] text-gray-400 mt-1">2024 - Para Siempre</p>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- LIGHTBOX PARA VER FOTOS EN TAMAÑO COMPLETO -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <img id="lightbox-img" src="" class="max-w-[90%] max-h-[85%] rounded-2xl shadow-2xl border-2 border-white/20">
+    </div>
+
+    <!-- MODAL DE LA CARTA DESPLEGABLE COMPLETA -->
+    <div id="letter-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full max-h-[85vh] overflow-y-auto p-6 shadow-2xl relative border border-rose-100">
+            <button onclick="closeLetterModal()" class="absolute top-4 right-4 w-8 h-8 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center hover:bg-rose-100">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            
+            <div class="text-center mb-4">
+                <h3 class="font-cursive text-4xl text-rose-600">Mi Carta Para Ti</h3>
+                <p class="text-[11px] text-gray-400">Escrita desde el corazón</p>
+            </div>
+
+            <div class="space-y-4 text-xs text-gray-700 leading-relaxed italic border-t border-rose-100 pt-4">
+                <p>Querida Mena,</p>
+                <p>Quería crear este pequeño rincón en internet solo para nosotros dos, un espacio donde podamos guardar y recordar siempre lo especial que es lo que construimos día a día.</p>
+                <p>Desde el 25 de septiembre de 2024 mi vida ha tenido un brillo muy diferente. Gracias por tu paciencia, por tu cariño, por cada risa compartida y por estar a mi lado en todo momento.</p>
+                <p>Espero que al abrir esta página recuerdes lo mucho que te amo y lo importante que eres en mi vida. Este detalle es solo una pequeña muestra de todo lo que siento por ti.</p>
+                <p class="text-right font-bold text-rose-600 font-cursive text-xl mt-4">Con todo mi amor,<br>Christian ❤️</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT DE FUNCIONALIDAD -->
+    <script>
+        // GENERADOR DE CORAZONES FLOTANTES DE FONDO
+        function createHeart() {
+            const container = document.getElementById('heart-container');
+            const heart = document.createElement('div');
+            heart.classList.add('floating-heart');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 3 + 4 + 's';
+            heart.style.fontSize = Math.random() * 15 + 10 + 'px';
+            container.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 7000);
+        }
+        setInterval(createHeart, 600);
+
+        // CAMBIO DE PÁGINAS SUAVE
+        function goToPage(pageNumber) {
+            document.getElementById('page1').classList.toggle('page-visible', pageNumber === 1);
+            document.getElementById('page1').classList.toggle('page-hidden', pageNumber !== 1);
+            document.getElementById('page2').classList.toggle('page-visible', pageNumber === 2);
+            document.getElementById('page2').classList.toggle('page-hidden', pageNumber !== 2);
+            window.scrollTo(0, 0);
         }
 
-        // 3. Audio Player Logic (audio/mus_01.m4a) - Bucle continuo e interactivo
-        const audio = document.getElementById('audioPlayer');
-        const vinylDisc = document.getElementById('vinylDisc');
-        const tonearm = document.getElementById('tonearm');
-        const playIcon = document.getElementById('playIcon');
-        const progressBar = document.getElementById('progressBar');
-        const currentTimeElem = document.getElementById('currentTime');
-        const durationTimeElem = document.getElementById('durationTime');
-
-        function toggleAudioPlay() {
-            if (audio.paused) {
-                audio.play().then(() => {
-                    vinylDisc.classList.add('vinyl-spinning');
-                    tonearm.classList.add('playing');
-                    playIcon.className = "fa-solid fa-pause";
-                }).catch(err => {
-                    console.log("Audio play error:", err);
-                });
-            } else {
-                audio.pause();
-                vinylDisc.classList.remove('vinyl-spinning');
-                tonearm.classList.remove('playing');
-                playIcon.className = "fa-solid fa-play";
-            }
-        }
-
-        function formatTime(seconds) {
-            if (isNaN(seconds)) return "0:00";
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-        }
-
-        audio.addEventListener('timeupdate', () => {
-            if (audio.duration) {
-                const progressPercent = (audio.currentTime / audio.duration) * 100;
-                progressBar.style.width = `${progressPercent}%`;
-                currentTimeElem.innerText = formatTime(audio.currentTime);
-                durationTimeElem.innerText = formatTime(audio.duration);
-            }
-        });
-
-        function seekAudio(e) {
-            const container = document.getElementById('progressBarContainer');
-            const rect = container.getBoundingClientRect();
-            const clickPosition = (e.clientX - rect.left) / rect.width;
-            if (audio.duration) {
-                audio.currentTime = clickPosition * audio.duration;
-            }
-        }
-
-        // 4. Voice Player Logic (audio/mus_02.m4a) - Atenúa el volumen de la música al 15%
-        const voiceAudio = document.getElementById('voicePlayer');
-        const voicePlayIcon = document.getElementById('voicePlayIcon');
-        const voiceProgressBar = document.getElementById('voiceProgressBar');
-        const voiceCurrentTimeElem = document.getElementById('voiceCurrentTime');
-        const voiceDurationTimeElem = document.getElementById('voiceDurationTime');
-
-        function toggleVoicePlay() {
-            if (voiceAudio.paused) {
-                voiceAudio.play().then(() => {
-                    voicePlayIcon.className = "fa-solid fa-pause";
-                    // Disminuir fuertemente el volumen de la música al 15% mientras habla
-                    audio.volume = 0.15;
-                }).catch(err => {
-                    console.log("Voice audio play error:", err);
-                });
-            } else {
-                voiceAudio.pause();
-                voicePlayIcon.className = "fa-solid fa-play";
-                // Restaurar volumen de la música al 100%
-                audio.volume = 1.0;
-            }
-        }
-
-        voiceAudio.addEventListener('timeupdate', () => {
-            if (voiceAudio.duration) {
-                const progressPercent = (voiceAudio.currentTime / voiceAudio.duration) * 100;
-                voiceProgressBar.style.width = `${progressPercent}%`;
-                voiceCurrentTimeElem.innerText = formatTime(voiceAudio.currentTime);
-                voiceDurationTimeElem.innerText = formatTime(voiceAudio.duration);
-            }
-        });
-
-        // Al terminar la nota de voz, regresa el volumen de la música al 100%
-        voiceAudio.addEventListener('ended', () => {
-            voicePlayIcon.className = "fa-solid fa-play";
-            voiceProgressBar.style.width = '0%';
-            audio.volume = 1.0;
-        });
-
-        function seekVoice(e) {
-            const container = document.getElementById('voiceBarContainer');
-            const rect = container.getBoundingClientRect();
-            const clickPosition = (e.clientX - rect.left) / rect.width;
-            if (voiceAudio.duration) {
-                voiceAudio.currentTime = clickPosition * voiceAudio.duration;
-            }
-        }
-
-        // 5. Real-Time Relationship Counter (From Sept 25, 2024)
+        // CONTADOR DE TIEMPO TRANSCURRIDO
         const startDate = new Date('2024-09-25T00:00:00');
-
         function updateCounter() {
             const now = new Date();
             const diff = now - startDate;
 
-            if (diff > 0) {
-                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-                const minutes = Math.floor((diff / (1000 * 60)) % 60);
-                const seconds = Math.floor((diff / 1000) % 60);
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((diff / 1000 / 60) % 60);
+            const seconds = Math.floor((diff / 1000) % 60);
 
-                document.getElementById('days').innerText = String(days).padStart(2, '0');
-                document.getElementById('hours').innerText = String(hours).padStart(2, '0');
-                document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
-                document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
-            }
+            document.getElementById('days').innerText = String(days).padStart(2, '0');
+            document.getElementById('hours').innerText = String(hours).padStart(2, '0');
+            document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
         }
-        updateCounter();
         setInterval(updateCounter, 1000);
+        updateCounter();
 
-        // 6. Photo Carousel Logic (8 Photos: img_05 to img_12)
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.carousel-slide');
-        const dots = document.querySelectorAll('.slide-dot');
+        // CONTROL DE AUDIOS Y REPRODUCCIÓN
+        const bgMusic = document.getElementById('bg-music');
+        const voiceNote = document.getElementById('voice-note');
+        const vinyl = document.getElementById('vinyl');
+        const arm = document.getElementById('arm');
+        const bgIcon = document.getElementById('bg-icon');
 
-        function showSlide(index) {
-            slides.forEach((slide, i) => {
-                slide.classList.remove('active');
-                if (dots[i]) {
-                    dots[i].className = 'slide-dot w-2 h-2 rounded-full bg-white/40 cursor-pointer';
-                }
-            });
+        let isBgPlaying = false;
 
-            if (index >= slides.length) currentSlide = 0;
-            if (index < 0) currentSlide = slides.length - 1;
-
-            slides[currentSlide].classList.add('active');
-            if (dots[currentSlide]) {
-                dots[currentSlide].className = 'slide-dot w-2 h-2 rounded-full bg-white/90 cursor-pointer';
+        function toggleBgMusic() {
+            if (!isBgPlaying) {
+                bgMusic.load(); // Forzar carga nativa en navegador móvil
+                bgMusic.play().then(() => {
+                    isBgPlaying = true;
+                    vinyl.classList.add('spinning');
+                    arm.classList.add('tonearm-on');
+                    bgIcon.classList.remove('fa-play');
+                    bgIcon.classList.add('fa-pause');
+                }).catch(e => console.log(e));
+            } else {
+                bgMusic.pause();
+                isBgPlaying = false;
+                vinyl.classList.remove('spinning');
+                arm.classList.remove('tonearm-on');
+                bgIcon.classList.remove('fa-pause');
+                bgIcon.classList.add('fa-play');
             }
         }
 
-        function changeSlide(direction) {
-            currentSlide += direction;
-            showSlide(currentSlide);
-        }
+        function toggleVoiceNote() {
+            const voiceIcon = document.getElementById('voice-icon');
+            const voiceText = document.getElementById('voice-text');
 
-        function setSlide(index) {
-            currentSlide = index;
-            showSlide(currentSlide);
-        }
+            if (voiceNote.paused) {
+                voiceNote.load(); // Forzar carga en móvil
+                voiceNote.play().then(() => {
+                    voiceIcon.classList.remove('fa-play');
+                    voiceIcon.classList.add('fa-pause');
+                    voiceText.innerText = "Pausar Mensaje";
 
-        setInterval(() => {
-            currentSlide++;
-            showSlide(currentSlide);
-        }, 4000);
-
-        // 7. Dynamic Video Carousel Logic (vid_01 y vid_02)
-        const videoData = [
-            { src: "video/vid_01.mp4", caption: "⚽ Jugando fútbol en la cancha" },
-            { src: "video/vid_02.mp4", caption: "👣 Nuestros pies juntos" }
-        ];
-        let currentVideoIndex = 0;
-
-        function updateVideoSlide() {
-            const videoElem = document.getElementById('activeVideoPlayer');
-            const captionElem = document.getElementById('videoCaption');
-            const dot0 = document.getElementById('videoDot0');
-            const dot1 = document.getElementById('videoDot1');
-
-            videoElem.pause();
-            videoElem.src = videoData[currentVideoIndex].src;
-            captionElem.innerText = videoData[currentVideoIndex].caption;
-            videoElem.load();
-
-            if (currentVideoIndex === 0) {
-                dot0.className = "w-2.5 h-2.5 rounded-full bg-white/90 cursor-pointer";
-                dot1.className = "w-2.5 h-2.5 rounded-full bg-white/40 cursor-pointer";
-            } else {
-                dot0.className = "w-2.5 h-2.5 rounded-full bg-white/40 cursor-pointer";
-                dot1.className = "w-2.5 h-2.5 rounded-full bg-white/90 cursor-pointer";
-            }
-        }
-
-        function changeVideoSlide(direction) {
-            currentVideoIndex += direction;
-            if (currentVideoIndex >= videoData.length) currentVideoIndex = 0;
-            if (currentVideoIndex < 0) currentVideoIndex = videoData.length - 1;
-            updateVideoSlide();
-        }
-
-        function setVideoSlide(index) {
-            currentVideoIndex = index;
-            updateVideoSlide();
-        }
-
-        // 8. Quiz Interactive Logic
-        let score = 0;
-        let answeredCount = 0;
-
-        function checkAnswer(btn, isCorrect) {
-            const parent = btn.parentElement;
-            const buttons = parent.querySelectorAll('button');
-
-            buttons.forEach(b => b.disabled = true);
-
-            if (isCorrect) {
-                btn.classList.add('correct');
-                score++;
-                document.getElementById('quizScore').innerText = score;
-            } else {
-                btn.classList.add('wrong');
-                buttons.forEach(b => {
-                    if (b.getAttribute('onclick').includes('true')) {
-                        b.classList.add('correct');
+                    // Atenuación al 15% (0.15) de la música de fondo
+                    if (isBgPlaying) {
+                        bgMusic.volume = 0.15;
                     }
-                });
-            }
-
-            answeredCount++;
-            if (answeredCount === 13 && score >= 10) {
-                document.getElementById('quizSuccessMsg').classList.remove('hidden');
-            }
-        }
-
-        // 9. Floating Particles Generator
-        function createParticles(containerId, count, isDark) {
-            const container = document.getElementById(containerId);
-            if (!container) return;
-            const icons = ['fa-heart', 'fa-sparkles', 'fa-star'];
-
-            for (let i = 0; i < count; i++) {
-                const p = document.createElement('i');
-                const randomIcon = icons[Math.floor(Math.random() * icons.length)];
-                p.className = `fa-solid ${randomIcon} dark-particle`;
-                
-                if (!isDark) {
-                    p.style.color = 'rgba(244, 114, 182, 0.45)';
-                } else {
-                    p.style.color = 'rgba(251, 113, 133, 0.35)';
-                }
-
-                p.style.left = `${Math.random() * 100}%`;
-                p.style.fontSize = `${Math.random() * 14 + 10}px`;
-                p.style.animationDelay = `${Math.random() * 8}s`;
-                p.style.animationDuration = `${Math.random() * 6 + 6}s`;
-
-                container.appendChild(p);
-            }
-        }
-
-        createParticles('particleContainer1', 18, true);
-        createParticles('particleContainer2', 20, false);
-
-        // 10. Interactive Envelope Toggle
-        function toggleEnvelope() {
-            const envelope = document.getElementById('envelope');
-            const heart = document.getElementById('envelopeHeart');
-            envelope.classList.toggle('open');
-            
-            if (envelope.classList.contains('open')) {
-                heart.style.opacity = '0';
+                }).catch(e => console.log(e));
             } else {
-                setTimeout(() => {
-                    heart.style.opacity = '1';
-                }, 400);
+                voiceNote.pause();
+                voiceIcon.classList.remove('fa-pause');
+                voiceIcon.classList.add('fa-play');
+                voiceText.innerText = "Escuchar Mensaje de Voz";
+                if (isBgPlaying) {
+                    bgMusic.volume = 1.0;
+                }
             }
         }
 
-        // 11. Photo Modal Dialog
-        function openPhotoModal(src, title, desc) {
-            document.getElementById('modalImg').src = src;
-            document.getElementById('modalTitle').innerText = title;
-            document.getElementById('modalDesc').innerText = desc;
-            
-            const modal = document.getElementById('photoModal');
-            modal.classList.remove('hidden');
-            modal.classList.add('modal-active');
+        voiceNote.onended = function() {
+            document.getElementById('voice-icon').classList.remove('fa-pause');
+            document.getElementById('voice-icon').classList.add('fa-play');
+            document.getElementById('voice-text').innerText = "Escuchar Mensaje de Voz";
+            if (isBgPlaying) {
+                bgMusic.volume = 1.0;
+            }
+        };
+
+        // CARRUSEL DE VIDEOS
+        const videos = ['video/vid_01.mp4', 'video/vid_02.mp4'];
+        let currentVideoIndex = 0;
+        const videoPlayer = document.getElementById('video-player');
+        const videoTitle = document.getElementById('video-title');
+
+        function changeVideo(direction) {
+            currentVideoIndex += direction;
+            if (currentVideoIndex < 0) currentVideoIndex = videos.length - 1;
+            if (currentVideoIndex >= videos.length) currentVideoIndex = 0;
+
+            videoPlayer.src = videos[currentVideoIndex];
+            videoPlayer.load(); // Forzar recarga nativa de video
+            videoTitle.innerText = `Video ${currentVideoIndex + 1} de ${videos.length}`;
         }
 
-        function closePhotoModal() {
-            const modal = document.getElementById('photoModal');
-            modal.classList.add('hidden');
-            modal.classList.remove('modal-active');
+        // MODAL CARTA
+        function openLetterModal() {
+            document.getElementById('letter-modal').classList.remove('hidden');
+            document.getElementById('letter-modal').classList.add('flex');
+        }
+
+        function closeLetterModal() {
+            document.getElementById('letter-modal').classList.add('hidden');
+            document.getElementById('letter-modal').classList.remove('flex');
+        }
+
+        // LIGHTBOX FOTOS
+        function openLightbox(src) {
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox').classList.add('active');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
         }
     </script>
 </body>
